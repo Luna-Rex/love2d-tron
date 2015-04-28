@@ -3,16 +3,10 @@
 PROGRAM INFO:
 A clone of the classic Tron game. Survive for as long as possible by avoiding light trails and the screen edges.
 Controls used are WASD for player 1 and the arrow keys for player 2. R restarts when a player loses, Escape closes the game.
-Completed with 1 non-critical bug remaining around 21:20 on 20/09/2014.
 
-Updated with 0 known bugs 10:21 on 28/10/2014.
+Last updated 28/10/2014 at 10:21.
 
-NOTES:
----
-Any change in love.load might want to be doublechecked with the restart code to maintain similarity.
---
-Map edges at x49 y37 for tileSize 16.
-Something like whatever half of those is for tileSize 32.
+NOTE: Any change in love.load might want to be doublechecked with the restart code to maintain similarity cuz I didn't bother making a fancy reset function.
 
 ]]
 function love.load()
