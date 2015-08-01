@@ -15,4 +15,4 @@ Esc - *Quit game*
 
 **License**
 
-Feel free to edit, redistribute, claim credit for or do whatever with this code.
+Feel free to edit, redistribute, claim credit for or do whatever with this code. (i'm pretty much done with it)

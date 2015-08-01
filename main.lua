@@ -17,13 +17,13 @@ function love.load()
 	--The width and height of each drawn rectangle.
 	tileSize = 16
 	
-	--Map max width and height are higher than necessary. Did it for scalability. Left it despite never really needing it.
+	--Map max width and height. They're higher than necessary but I didn't feel like changing it cuz it works anyway.
 	mapWidth = 50
 	mapHeight = 50 
 
 	visitedTiles = {mapWidth, mapHeight} 
 	
-	--Create an empty game world. Starts at -1 so handling a loss at x/y 0 can be done without crashing.
+	--Create an empty game world. Starts at -1 so handling a loss at x/y 0 can be done without crashing from trying to access an array position outside the array.
 	for i = -1, mapHeight do
 		visitedTiles[i] = {}
 		for j = -1, mapWidth do
@@ -31,14 +31,16 @@ function love.load()
 		end
 	end
 	
+	--Player 1 vars
 	p1 = {}
 	p1.headX = 5
 	p1.headY = 18
-	p1.direction = 3 --up down left right, 0 1 2 3, that order.
+	p1.direction = 3 --up down left right, 0 1 2 3, that order. (should have probably used a string to just show it at a glance ha ha welp)
 	p1.lastMove = 3
 	p1.lost = 0
 	p1.score = 0
     
+	--Player 2 vars
 	p2 = {}
 	p2.headX = 44
 	p2.headY = 18
@@ -47,7 +49,7 @@ function love.load()
 	p2.lost = 0
     p2.score = 0
 
-	timer = 0
+	timer = 0 --Used for counting the time passed since the last 'timeUpdate()'.
 
 end
 
@@ -95,7 +97,7 @@ end
 
 function love.draw()
 
-	drawVisited() --Draw visited tiles under everything else.
+	drawVisited() --Draw each player's visited tiles under everything else.
 
 	--Draw player 1
 	love.graphics.setColor(255, 0, 0, 255)
@@ -134,7 +136,7 @@ function love.draw()
 	
 end
 
---Run whenever a certain amount of time has passed. Handles players committing to movement in their set direction.
+--Runs whenever a certain amount of time has passed. Moves players in their set direction.
 function timeUpdate()
 
 	--Move both players in their set direction.
@@ -171,12 +173,14 @@ function timeUpdate()
 		p2.headX = p2.headX + 1
 		p2.lastMove = 3
 	end
+	
 end
 
 --This function checks and handles most keyboard input aside from the restart command.
 function checkKeyInput()
+	--NOTE: There was a slight bug here where the player could go backwards if they switched direction twice before moving, which would kill them. Redundant solution in place using the lastMove var. Didn't feel like cleaning it up.
 
-	--Player 1 input, blocks 180 degree turns. NOTE: Slight bug here. Redundant solution in place using the lastMove var.
+	--Player 1 input, blocks 180 degree turns.
 	if ((p1.direction ~= 1) and love.keyboard.isDown('w') and p1.lastMove ~= 1) then
 		p1.direction = 0
 	end
@@ -207,12 +211,13 @@ function checkKeyInput()
 	if (love.keyboard.isDown("escape")) then
 		love.event.push("quit")
 	end
+	
 end
 
 --Check, then set tiles properly. Also handles loss checking.
 function checkVisited()
 
-	--If either player collides with a set tile.
+	--Check if either player collides with a set tile.
 	if visitedTiles[p1.headX][p1.headY] == 1 or visitedTiles[p1.headX][p1.headY] == 2 then
 		p1.lost = 1
 	end
@@ -220,6 +225,7 @@ function checkVisited()
 		p2.lost = 1
 	end
 	
+	--Check if either player collides with the window edges
 	if p1.headX < 0 or p1.headX > 49 then
 		p1.lost = 1
 	end
@@ -233,18 +239,19 @@ function checkVisited()
 		p2.lost = 1
 	end
 	
-	--If either players have lost, increase score. Function does not run after a loss. Ignores ties.
+	--Check if either player has lost, increase score. Function does not run after a loss. No player gets points on a tie.
 	if p1.lost == 1 and p2.lost ~= 1 then
 		p2.score = p2.score + 1
 	elseif p1.lost ~= 1 and p2.lost == 1 then
 		p1.score = p1.score + 1
 	end
 	
-	--If either player has not lost, set their tile as visited.
+	--If no player has lost yet, set their tile as visited.
 	if p1.lost ~= 1 and p2.lost ~= 1 then
 		visitedTiles[p1.headX][p1.headY] = 1
 		visitedTiles[p2.headX][p2.headY] = 2
 	end
+	
 end
 
 --Draws visited tiles in the proper trail color.
