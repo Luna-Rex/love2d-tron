@@ -14,7 +14,7 @@ function love.load()
 	love.window.setMode(800, 608)
 	love.window.setTitle("Tron")
 
-	--The width and height of each drawn rectangle.
+	--The width and height of each drawn rectangle on the game's grid.
 	tileSize = 16
 	
 	--Map max width and height. They're higher than necessary but I didn't feel like changing it cuz it works anyway.
